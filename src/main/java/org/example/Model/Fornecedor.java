@@ -14,13 +14,18 @@ public class Fornecedor {
         this.id = id;
     }
 
-    public Fornecedor(String nome, String cnpj) {
+    public Fornecedor(int id, String nome, String cnpj) {
         this.nome = nome;
         this.cnpj = cnpj;
     }
 
     public Fornecedor(int id) {
         this.id = id;
+    }
+
+    public Fornecedor(String nome, String cnpj) {
+        this.nome = nome;
+        this.cnpj = cnpj;
     }
 
     public int getId() {

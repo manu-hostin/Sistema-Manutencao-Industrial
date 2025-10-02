@@ -9,15 +9,15 @@ public class NotaEntrada {
 
     private int idFornecedor;
 
-    private LocalDate dataEntrada;
+    private Date dataEntrada;
 
-    public NotaEntrada(int id, int idFornecedor, LocalDate dataEntrada) {
+    public NotaEntrada(int id, int idFornecedor, Date dataEntrada) {
         this.id = id;
         this.idFornecedor = idFornecedor;
         this.dataEntrada = dataEntrada;
     }
 
-    public NotaEntrada(int idFornecedor, LocalDate dataEntrada) {
+    public NotaEntrada(int idFornecedor, Date dataEntrada) {
         this.idFornecedor = idFornecedor;
         this.dataEntrada = dataEntrada;
     }
@@ -38,11 +38,11 @@ public class NotaEntrada {
         this.idFornecedor = idFornecedor;
     }
 
-    public LocalDate getDataEntrada() {
+    public Date getDataEntrada() {
         return dataEntrada;
     }
 
-    public void setDataEntrada(LocalDate dataEntrada) {
+    public void setDataEntrada(Date dataEntrada) {
         this.dataEntrada = dataEntrada;
     }
 }

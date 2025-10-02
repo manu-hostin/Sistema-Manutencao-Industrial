@@ -23,8 +23,8 @@ public class Material {
         this.estoque = estoque;
     }
 
-    public Material(String nome) {
-        this.nome = nome;
+    public Material(int id) {
+        this.id = id;
     }
 
     public int getId() {

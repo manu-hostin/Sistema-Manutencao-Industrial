@@ -62,4 +62,21 @@ public class FornecedorDAO {
         return fornecedores;
     }
 
+    public int buscarPorCnpj(String cnpj) throws SQLException {
+        String query = "SELECT id FROM Fornecedor WHERE cnpj = ?";
+
+        try (Connection conn = Conexao.conectar();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, cnpj);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("id");
+            }
+        }
+        return -1;
+    }
+
+
 }
