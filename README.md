@@ -1,4 +1,4 @@
-# Sistema de Manutenção Industrial - Protótipo WEG
+# 💾 Sistema de Manutenção Industrial - Protótipo WEG
 
 ## 🔹 Descrição
 Este projeto é um protótipo de sistema desenvolvido em **Java** para gerenciamento de almoxarifado industrial. O sistema permite controlar fornecedores, materiais, notas de entrada e requisições de materiais, utilizando **JDBC** para persistência em banco de dados MySQL.  
@@ -105,3 +105,38 @@ CREATE TABLE NotaEntradaItem (
   FOREIGN KEY (idMaterial) REFERENCES Material(id)
 );
 ````
+
+## 🔹 Estrutura do Projeto
+```
+src/  
+ ├─ model/         # Classes Modelo (Fornecedor, Material, Requisicao, etc.)  
+ ├─ dao/           # Classes DAO para CRUD no banco  
+ ├─ util/          # Classes utilitárias (conexão, validações)  
+ └─ Main.java      # Menu principal e fluxo do sistema
+````
+ 
+## 🔹 Regras de Negócio Importantes
+✅ Cadastro de **fornecedor** e **material** não permite duplicidade.  
+✅ **Estoque** não pode ser negativo.  
+✅ Requisições só podem ser atendidas se houver estoque suficiente.  
+✅ Status da requisição: **PENDENTE → ATENDIDA → CANCELADA** (se necessário).  
+✅ Validações de entradas **nulas ou inválidas**.  
+✅ Sistema funcional **sem `static`**, utilizando instâncias e objetos.  
+
+---
+
+## 🔹 Como Executar o Sistema
+1. **Criar o banco de dados MySQL** e importar as tabelas fornecidas.
+2. **Configurar a conexão** no arquivo `Conexao.java`:  
+   
+   ```java
+   String url = "jdbc:mysql://localhost:3306/nomedobanco?useSSL=false&serverTimezone=UTC";
+   String user = "root";
+   String password = "senha";
+
+
+## 🔹 Observações
+
+- Desenvolvido como protótipo para WEG, simulando cenários corporativos.
+- Aplicação contínua até escolha de “Sair” no menu.
+- Código estruturado e legível, seguindo boas práticas de Java e POO.
