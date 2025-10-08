@@ -27,6 +27,10 @@ public class Material {
         this.id = id;
     }
 
+    public Material() {
+
+    }
+
     public int getId() {
         return id;
     }

@@ -62,4 +62,33 @@ public class RequisicaoMaterialDAO {
         }
         return lista;
     }
+    public void atualizarStatus (int idRequisicao) throws SQLException{
+        String query = "UPDATE Requisicao SET status = 'ATENDIDA' WHERE id = ?";
+
+        try(Connection conn = Conexao.conectar();
+            PreparedStatement stmt = conn.prepareStatement(query)){
+
+            stmt.setInt(1, idRequisicao);
+            stmt.executeUpdate();
+        }
+    }
+    public List<RequisicaoMaterial> listarRequisicoesPendentes() throws SQLException {
+        List<RequisicaoMaterial> lista = new ArrayList<>();
+        String query = "SELECT * FROM Requisicao WHERE status = 'PENDENTE'";
+        try(Connection conn = Conexao.conectar();
+            PreparedStatement stmt = conn.prepareStatement(query);
+            var rs = stmt.executeQuery()) {
+
+            while(rs.next()){
+                lista.add(new RequisicaoMaterial(
+                        rs.getInt("id"),
+                        rs.getString("setor"),
+                        rs.getString("status"),
+                        rs.getDate("dataSolicitacao")
+                ));
+            }
+        }
+        return lista;
+    }
+
 }

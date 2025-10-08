@@ -13,31 +13,31 @@ import java.util.*;
 
 public class Main {
     static Scanner SC = new Scanner(System.in);
+
     public static void main(String[] args) {
 
         inicio();
 
     }
 
-    public static void inicio () {
+    public static void inicio() {
         boolean sair = false;
         System.out.println("------------------------------------------------------");
         System.out.println("    Sistema de Gestão de Almoxarifado Industrial");
         System.out.println("------------------------------------------------------");
         System.out.println("""
-               1. Cadastrar fornecedor;
-               2. Cadastral Material;
-               3. Registrar Nota de Entrada;
-               4. Criar Requisição de Material;
-               5. Atender Requisição;
-               6. Cancelar Requisição;
-               
-               0. Sair.""");
+                1. Cadastrar fornecedor;
+                2. Cadastral Material;
+                3. Registrar Nota de Entrada;
+                4. Criar Requisição de Material;
+                5. Atender Requisição;
+                
+                0. Sair.""");
         System.out.print("Digite a opção que deseja: ");
         int opcao = SC.nextInt();
         SC.nextLine();
 
-        switch (opcao){
+        switch (opcao) {
             case 1 -> {
                 cadastrarFornecedor();
                 break;
@@ -59,14 +59,17 @@ public class Main {
                 break;
             }
             case 0 -> {
-
+                sair = true;
+                System.out.println("Saindo... Até breve.");
+                break;
             }
 
         }
-        if(!sair){
+        if (!sair) {
             inicio();
         }
     }
+
     public static void cadastrarFornecedor() {
         System.out.println("\n=== CADASTRAR FORNECEDOR ===");
         System.out.print("\nDigite o nome do fornecedor: ");
@@ -75,28 +78,29 @@ public class Main {
         System.out.print("Digite o CNPJ do fornecedor: ");
         String cnpj = SC.nextLine();
 
-            if(!nome.isEmpty() && !cnpj.isEmpty()){
+        if (!nome.isEmpty() && !cnpj.isEmpty()) {
 
-                var fornecedor = new Fornecedor(nome, cnpj);
-                var dao = new FornecedorDAO();
+            var fornecedor = new Fornecedor(nome, cnpj);
+            var dao = new FornecedorDAO();
 
-                try{
-                    if (!dao.validarDuplicacao(fornecedor)) {
+            try {
+                if (!dao.validarDuplicacao(fornecedor)) {
 
-                        dao.cadastrarFornecedor(fornecedor);
+                    dao.cadastrarFornecedor(fornecedor);
 
-                    } else {
-                        System.out.println("\nCNPJ já cadastrado!");
-                    }
-
-                } catch (SQLException e){
-                    e.printStackTrace();
+                } else {
+                    System.out.println("\nCNPJ já cadastrado!");
                 }
-            } else {
-                System.out.println("\nPor favor, digite um nome e um cnpj válido.");
+
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
+        } else {
+            System.out.println("\nPor favor, digite um nome e um cnpj válido.");
+        }
     }
-    public static void cadastrarMaterial(){
+
+    public static void cadastrarMaterial() {
         System.out.println("\n=== CADASTRAR MATERIAL ===");
         System.out.print("Digite o nome do material: ");
         String nome = SC.nextLine();
@@ -108,19 +112,19 @@ public class Main {
         double quantidade = SC.nextDouble();
         SC.nextLine();
 
-        if(!nome.isEmpty() && !medida.isEmpty() && quantidade >= 0){
+        if (!nome.isEmpty() && !medida.isEmpty() && quantidade >= 0) {
 
             var material = new Material(nome, medida, quantidade);
             var dao = new MaterialDAO();
 
-            try{
-                if(!dao.verificarDuplicacao(material)){
+            try {
+                if (!dao.verificarDuplicacao(material)) {
 
                     dao.cadastrarMaterial(material);
                 } else {
                     System.out.println("\nMaterial já cadastrado!");
                 }
-            } catch (SQLException e){
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
         } else {
@@ -165,25 +169,25 @@ public class Main {
         java.sql.Date dataEntrada = java.sql.Date.valueOf(dataLocal); // Converte para java.sql.Date
 
 
-        try{ // Cria a lista de materiais
+        try { // Cria a lista de materiais
             materiais = materialDao.listarMateriais();
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
         do {
-            try{
+            try {
                 materiais = materialDao.listarMateriais();
-            } catch (SQLException e){
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
 
             System.out.println("\nMateriais disponíveis:");
             materiais.forEach(material -> { // Lista os materiais
-                System.out.println("ID: "+ material.getId());
-                System.out.println("Material "+material.getNome());
-                System.out.println("Unidade: "+material.getUnidade());
-                System.out.println("Estoque: "+material.getEstoque());
+                System.out.println("ID: " + material.getId());
+                System.out.println("Material " + material.getNome());
+                System.out.println("Unidade: " + material.getUnidade());
+                System.out.println("Estoque: " + material.getEstoque());
                 System.out.println("----------------------------------------");
             });
 
@@ -192,12 +196,12 @@ public class Main {
 
             var material = new Material(idMaterial);
 
-            try{
-                if(!materialDao.verificarDuplicacaoID(material)){ // Verifica se o material existe
+            try {
+                if (!materialDao.verificarDuplicacaoID(material)) { // Verifica se o material existe
                     System.out.println("\nNão há nenhum material cadastrado com esse ID. Operação cancelada.");
                     return;
                 }
-            } catch (SQLException e){
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
 
@@ -234,9 +238,9 @@ public class Main {
             return;
         }
 
-        try{
+        try {
             idNota = daoNota.pegarIDNota(fornecedor, dataEntrada);
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -248,7 +252,7 @@ public class Main {
 
     }
 
-    public static void requisicaoMaterial(){
+    public static void requisicaoMaterial() {
         var materialDao = new MaterialDAO();
         var daoReq = new RequisicaoMaterialDAO();
         var daoReqItem = new RequisicaoItemDAO();
@@ -262,7 +266,7 @@ public class Main {
         String material = SC.nextLine();
 
         try { // Confirma se material existe
-            if (!materialDao.validarMaterial(material)){
+            if (!materialDao.validarMaterial(material)) {
                 System.out.println("\nMaterial não existe! Operação cancelada.");
                 return;
             }
@@ -275,7 +279,7 @@ public class Main {
         SC.nextLine();
 
         try { // Confirma quantidade digitada
-            if (quantidade > materialDao.buscarQuantidade(material)){
+            if (quantidade > materialDao.buscarQuantidade(material) || quantidade <= 0) {
                 System.out.println("\nQuantidade indisponível. Operação cancelada.");
                 return;
             }
@@ -291,13 +295,13 @@ public class Main {
         try {
             var requisicao = new RequisicaoMaterial(setor, "PENDENTE", sqlDate); // Cria objeto requisicao
 
-            if(!setor.isEmpty() && !material.isEmpty()){
+            if (!setor.isEmpty() && !material.isEmpty()) {
                 daoReq.RegistrarRequisicao(requisicao); // Realizou a requisição do material
-            }else {
+            } else {
                 System.out.println("Por favor, digite todos os campos.");
                 return;
             }
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -308,36 +312,70 @@ public class Main {
             var requisicaoItem = new RequisicaoItem(idReq, idMaterial, quantidade); // Cria o objeto reqItem
             daoReqItem.registrarRequisicaoItem(idReq, idMaterial, quantidade);
 
-        } catch (SQLException e){
-            e.printStackTrace();
-        }
-    }
-    public static void atenderRequisicao (){
-        List<RequisicaoMaterial> lista = new ArrayList<>();
-        var daoRqMaterial = new RequisicaoMaterialDAO();
-
-        System.out.println("=== ATENDER REQUISIÇÃO ===");
-
-
-        try {
-            lista = daoRqMaterial.listarRequisicoes();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println("Requisições disponíveis:");
-        lista.forEach(rq->{
-            System.out.println("ID: "+ rq.getId());
-            System.out.println("Setor: "+rq.getSetor());
-            System.out.println("Status: "+rq.getStatus());
-            System.out.println("Data de solicitação: " +rq.getDataSolicitacao());
-            System.out.println("----------------------------------------------------");
-        });
-
-        System.out.println("Digite o ID da requisição que deseja atender: ");
-        int requisicao = SC.nextInt();
-        SC.nextLine();
-
-
     }
+
+    public static void atenderRequisicao() {
+        var daoRqMaterial = new RequisicaoMaterialDAO();
+        var daoMaterial = new MaterialDAO();
+        var daoReqItem = new RequisicaoItemDAO();
+        var material = new Material();
+        List<RequisicaoMaterial> listaPendentes = new ArrayList<>();
+        List<RequisicaoItem> itens = new ArrayList<>();
+
+        try {
+            listaPendentes = daoRqMaterial.listarRequisicoesPendentes();
+            itens = daoReqItem.listarItens();
+
+            if (listaPendentes.isEmpty()) {
+                System.out.println("Não há requisições pendentes!");
+                return;
+            } // Não há requisições
+
+            System.out.println("Requisições PENDENTES disponíveis:");
+            for (RequisicaoMaterial rq : listaPendentes) {
+                System.out.println("ID: " + rq.getId() + " | Setor: " + rq.getSetor() +
+                        " | Data: " + rq.getDataSolicitacao());
+            } // Lista as requisições pendentes
+
+            System.out.print("Digite o ID da requisição que deseja atender: ");
+            int idRequisicao = SC.nextInt();
+            SC.nextLine();
+
+            itens.forEach(itensDaReq -> { // Lista o item da requisição escolhida
+                if (itensDaReq.getIdRequisicao() == idRequisicao) {
+                    System.out.println("----------------------");
+                    System.out.println("ID da Requisição: " + itensDaReq.getIdRequisicao());
+                    System.out.println("ID do Material: " + itensDaReq.getIdMaterial());
+                    System.out.println("Quantidade: " + itensDaReq.getQuantidade());
+                }
+            });
+
+            if (itens.isEmpty()) {
+                System.out.println("Nenhum item encontrado para essa requisição!");
+                return;
+            } // Não há Requisições Itens
+
+
+            for (RequisicaoItem item : itens) {
+                if (item.getIdRequisicao() == idRequisicao) {
+
+                    int idMaterialDoItem = item.getIdMaterial();
+                    Double quantidadeRequisitada = item.getQuantidade();
+
+                    daoRqMaterial.atualizarStatus(idRequisicao); // Atualiza o status da requisição
+                    daoMaterial.subtrairEstoque(idMaterialDoItem, quantidadeRequisitada);
+
+                    System.out.println("\nRequisição feita e estoque e status atualizados!");
+                }
+            } // Atualiza o estoque do material
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }

@@ -138,4 +138,33 @@ public class MaterialDAO {
         }
         return false;
     }
+    public double buscarQuantidadeID(int id) throws SQLException {
+        String query = "SELECT estoque FROM Material WHERE id = ?";
+
+        try (Connection conn = Conexao.conectar();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getDouble("estoque");
+            } else {
+                return -1;
+            }
+        }
+    }
+    public void subtrairEstoque(int idMaterial, double quantidadeASubtrair) throws SQLException {
+        String query = "UPDATE Material SET estoque = estoque - ? WHERE id = ? AND estoque >= ?";
+
+        try(Connection conn = Conexao.conectar();
+            PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setDouble(1, quantidadeASubtrair);
+            stmt.setInt(2, idMaterial);
+            stmt.setDouble(3, quantidadeASubtrair);
+            stmt.executeUpdate();
+        }
+    }
+
 }
